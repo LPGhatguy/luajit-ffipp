@@ -1,0 +1,66 @@
+// Example FFI++ binding file
+
+// Load assemblies from production or from potential development files
+// Prefixes (lib-) and suffixes (.dll, .so) will be added automatically.
+assemblies {
+	HelloWorld
+	HelloWorld-msvc
+	HelloWorld-gcc
+}
+
+// Use these test symbols
+test {
+	msvc ??0HelloClass@@QAE@XZ;
+	itanium _ZN10HelloClassC1Ev;
+}
+
+class HelloClass {
+	has_virtuals;
+
+	data {
+		//public
+		int64_t one;
+		int32_t two;
+		double three;
+
+		//private
+		int32_t thisIsPrivate;
+	}
+
+	methods {
+		!() {
+			msvc ??0HelloClass@@QAE@XZ;
+			itanium _ZN10HelloClassC1Ev;
+		}
+
+		!(int64_t, int32_t) {
+			msvc ??0HelloClass@@QAE@_JH@Z;
+			itanium _ZN10HelloClassC1Exi;
+		}
+
+		!(int64_t, int32_t, double) {
+			msvc ??0HelloClass@@QAE@_JHN@Z;
+			itanium _ZN10HelloClassC1Exid;
+		}
+
+		~() {
+			msvc ??1HelloClass@@QAE@XZ;
+			itanium _ZN10HelloClassD1Ev;
+		}
+
+		void Say(const char*) {
+			msvc ?Say@HelloClass@@UAEXPBD@Z;
+			itanium _ZN10HelloClass8SayHelloEv;
+		}
+
+		void SayHello() {
+			msvc ?SayHello@HelloClass@@UAEXXZ;
+			itanium _ZN10HelloClass8SayHelloEv;
+		}
+
+		static void StaticHello() {
+			msvc ?StaticHello@HelloClass@@SAXXZ;
+			itanium _ZN10HelloClass11StaticHelloEv;
+		}
+	}
+}
