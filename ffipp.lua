@@ -633,7 +633,7 @@ ffipp.matchers.class_methods = {
 			}
 
 			for argument in arguments:gmatch("[^,]+") do
-				table.insert(entry.arguments, argument)
+				table.insert(entry.arguments, strip(argument))
 			end
 
 			entry.symbols = ffipp.parser.symbols(body)
@@ -662,7 +662,7 @@ ffipp.matchers.class_methods = {
 			}
 
 			for argument in arguments:gmatch("[^,]+") do
-				table.insert(entry.arguments, argument)
+				table.insert(entry.arguments, strip(argument))
 			end
 
 			entry.symbols = ffipp.parser.symbols(body)
@@ -687,7 +687,7 @@ ffipp.matchers.class_methods = {
 			}
 
 			for argument in arguments:gmatch("[^,]+") do
-				table.insert(entry.arguments, argument)
+				table.insert(entry.arguments, strip(argument))
 			end
 
 			entry.symbols = ffipp.parser.symbols(body)
