@@ -800,6 +800,8 @@ function ffipp.defines.class(info, definition, classes)
 		end
 	end
 
+	defines[name] = ffi.typeof(name .. "[1]")
+
 	return defines
 end
 

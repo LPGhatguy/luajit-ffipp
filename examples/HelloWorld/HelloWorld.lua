@@ -19,7 +19,7 @@ end
 binding.HelloClass__StaticHello_V()
 
 -- Create a class instance and do things with it
-local myhello = ffi.new("HelloClass[1]")
+local myhello = binding.HelloClass()
 binding.HelloClass__C_LID(myhello, 1, 2, 3)
 
 print(myhello[0].one) --> 1LL
