@@ -8,6 +8,7 @@ Type Remangler:
 	This is allowed in C++ and is common practice but isn't allowed in C.
 	Since differing only by return type isn't allowed in C++, we don't encode the return type in our names.
 
+	Reference types: R* where * is the type
 	Pointer to type: P* where * is the type
 	Const: Q* where * is the type
 	64-bit integer: L for signed, l for unsigned
@@ -33,7 +34,7 @@ local ffi = require("ffi")
 
 local compiler_test_count = 0
 local ffipp = {
-	version = {1, 1, 0},
+	version = {1, 2, 0},
 	defines = {},
 	names = {},
 	templates = {},
@@ -316,12 +317,17 @@ function ffipp.get_type_suffix(definition)
 	for key, argument in ipairs(definition.arguments) do
 		local is_pointer = not not argument:match("%*")
 		local is_const = not not argument:match("const%s+")
-		local regular_name = argument:gsub("%s*%*%s*", ""):gsub("const%s+", "")
+		local is_ref = not not argument:match("&")
+		local regular_name = argument:gsub("%s*%*%s*", ""):gsub("const%s+", ""):gsub("%s*&%s*", "")
 
 		if (ffipp.short_type[regular_name]) then
 			regular_name = ffipp.short_type[regular_name]
 		else
 			regular_name = "_" .. regular_name .. "_"
+		end
+
+		if (is_ref) then
+			regular_name = "R" .. regular_name
 		end
 
 		if (is_const) then

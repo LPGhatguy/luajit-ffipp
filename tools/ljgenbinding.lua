@@ -11,7 +11,7 @@ assert(jit, "LuaJIT 2.x is required!")
 assert(io.popen, "io.popen is required!")
 
 local args = {...}
-local libver = "0.1.0"
+local libver = "1.2.0"
 local config = {
 	lister = (jit.os == "Windows") and "dumpbin" or "nm",
 	output = nil, -- defaults to [assembly].ffipp
@@ -185,6 +185,7 @@ do
 
 		local classname
 		local is_constructor
+		local is_standalone
 		do
 			local a, b = name:match("([%w_]+)::([%w_~]+)$")
 
@@ -195,6 +196,9 @@ do
 			elseif (a and b) then
 				classname = a
 				name = b
+			else
+				is_standalone = true
+				print("\tSymbol failure:", demangled)
 			end
 		end
 
@@ -219,6 +223,8 @@ do
 			if (t) then
 				arguments[i] = "const " .. t .. " " .. rest
 			end
+
+			arguments[i] = argument:gsub("class%s+", "")
 		end
 
 		local out = {
@@ -227,7 +233,11 @@ do
 			virtual = is_virtual
 		}
 
-		if (is_constructor) then
+		if (is_standalone) then
+			out.type = "function"
+			out.name = name
+			out.returns = strip(prefix)
+		elseif (is_constructor) then
 			out.type = "constructor"
 		elseif (is_destructor) then
 			out.type = "destructor"
@@ -380,36 +390,41 @@ local function main()
 			end
 
 			symbol_count = symbol_count + 1
-			local class = classes[demangled.classname]
 
-			if (not class) then
-				class_count = class_count + 1
-				classes[demangled.classname] = {
-					name = demangled.classname,
-					has_virtuals = false,
-					data = {},
-					methods = {}
-				}
-				class = classes[demangled.classname]
-			end
+			if (demangled.classname) then
+				local class = classes[demangled.classname]
 
-			if (demangled.virtual) then
-				class.has_virtuals = true
-			end
-
-			local existing
-			for key, method in ipairs(class.methods) do
-				if (deep_match(demangled, method, {symbols = true})) then
-					existing = method
-					break
+				if (not class) then
+					class_count = class_count + 1
+					classes[demangled.classname] = {
+						name = demangled.classname,
+						has_virtuals = false,
+						data = {},
+						methods = {}
+					}
+					class = classes[demangled.classname]
 				end
-			end
 
-			if (existing) then
-				table.insert(existing.symbols, compiler_name .. " " .. symbol)
+				if (demangled.virtual) then
+					class.has_virtuals = true
+				end
+
+				local existing
+				for key, method in ipairs(class.methods) do
+					if (deep_match(demangled, method, {symbols = true})) then
+						existing = method
+						break
+					end
+				end
+
+				if (existing) then
+					table.insert(existing.symbols, compiler_name .. " " .. symbol)
+				else
+					table.insert(class.methods, demangled)
+					demangled.symbols = {compiler_name .. " " .. symbol}
+				end
 			else
-				table.insert(class.methods, demangled)
-				demangled.symbols = {compiler_name .. " " .. symbol}
+				print("symbol is standalone, not supported in 0.1.0")
 			end
 		else
 			if (why) then
