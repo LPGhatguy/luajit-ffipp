@@ -1,4 +1,6 @@
 // Example FFI++ binding file
+// You can generate a binding like this, minus the itanium symbols and data members with
+// luajit ljgenbinding.lua HelloWorld-msvc.dll
 
 // Load assemblies from production or from potential development files
 // Prefixes (lib-) and suffixes (.dll, .so) will be added automatically.

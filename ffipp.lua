@@ -7,7 +7,6 @@ Type Remangler:
 	Members need to be re-mangled to avoid collisions given function with the same name but different arguments.
 	This is allowed in C++ and is common practice but isn't allowed in C.
 	Since differing only by return type isn't allowed in C++, we don't encode the return type in our names.
-	Pointer should come before const in mangled names.
 
 	Pointer to type: P* where * is the type
 	Const: Q* where * is the type
@@ -34,7 +33,7 @@ local ffi = require("ffi")
 
 local compiler_test_count = 0
 local ffipp = {
-	version = {1, 0, 0},
+	version = {1, 1, 0},
 	defines = {},
 	names = {},
 	templates = {},
@@ -58,6 +57,7 @@ local ffipp = {
 		["uint16_t"] = "s",
 
 		["char"] = "C",
+		["signed char"] = "C",
 		["int8_t"] = "C",
 		["unsigned char"] = "c",
 		["uint8_t"] = "c",
@@ -715,9 +715,9 @@ typedef struct {
 } {{name}};
 ]]
 
-ffipp.templates.member_function_name = "{{classname}}__{{name}}_{{type_suffix}}"
+ffipp.templates.member_function_name = [[{{classname}}__{{name}}_{{type_suffix}}]]
 ffipp.templates.member_function = [[{{returns}} __thiscall {{name}}({{classname}}*{{arguments}}) asm("{{symbol}}");]]
-ffipp.templates.static_member_function_name = "{{classname}}__{{name}}_{{type_suffix}}"
+ffipp.templates.static_member_function_name = [[{{classname}}__{{name}}_{{type_suffix}}]]
 ffipp.templates.static_member_function = [[{{returns}} __cdecl {{name}}({{arguments}}) asm("{{symbol}}");]]
 ffipp.templates.constructor_name = [[{{classname}}__C_{{type_suffix}}]]
 ffipp.templates.constructor = [[{{classname}}* __thiscall {{name}}({{classname}}*{{arguments}}) asm("{{symbol}}");]]
