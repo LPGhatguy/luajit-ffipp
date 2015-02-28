@@ -1,4 +1,9 @@
 # LuaJIT FFI++
+![shield_license]
+![shield_release_version]
+![shield_prerelease_version]
+![shield_dev_version]
+
 FFI++ is a C++ FFI for LuaJIT 2.0+.
 
 ## Supported Platforms/Compilers:
@@ -45,3 +50,8 @@ See the `examples` directory for directions on using a binding.
 
 ## Notes
 - Some compilers will not export symbols of member functions with inline definitions. If you notice a missing constructor after generating a binding, modifying the code or filling in the missing method in Lua might be necessary.
+
+[shield_license]: https://img.shields.io/badge/license-zlib/libpng-333333.svg?style=flat-square
+[shield_release_version]: https://img.shields.io/badge/release-1.2.0-brightgreen.svg?style=flat-square
+[shield_prerelease_version]: https://img.shields.io/badge/prerelease-none-lightgrey.svg?style=flat-square
+[shield_dev_version]: https://img.shields.io/badge/development-1.2.1-orange.svg?style=flat-square

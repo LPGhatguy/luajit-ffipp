@@ -37,13 +37,8 @@ local binding_format = require("ffipp.binding_format")
 local detector = require("ffipp.detector")
 local utility = require("ffipp.utility")
 
-local compiler_test_count = 0
 local ffipp = {
-	version = {1, 2, 1},
-	defines = {},
-	cpp = {},
-
-	report_generated_code = false --enable for diagnosing codegen problems
+	version = {1, 2, 1}
 }
 
 
