@@ -38,14 +38,8 @@ local detector = require("ffipp.detector")
 local utility = require("ffipp.utility")
 
 local ffipp = {
-	version = {1, 2, 1}
+	version = {1, 3, 0}
 }
-
-
-
---===================--
--- EXPOSED FFI++ API --
---===================--
 
 --[[
 	Binding loadfile(string filename, Assembly? assembly)
