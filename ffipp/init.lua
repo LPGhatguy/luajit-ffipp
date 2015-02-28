@@ -38,7 +38,8 @@ local detector = require("ffipp.detector")
 local utility = require("ffipp.utility")
 
 local ffipp = {
-	version = {1, 3, 0}
+	version = {1, 3, 0, "alpha"},
+	version_string = "1.3.0-alpha"
 }
 
 --[[
